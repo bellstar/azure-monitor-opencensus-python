@@ -5,7 +5,8 @@ languages:
 - html
 products:
 - azure
-description: "This sample contains a simple Flask application to show how you can instrument the OpenCensus Azure Monitor exporters as well as track telemetry from popular Python libraries via OpenCensus integrations."
+- docker
+description: "This sample contains a simple Flask application on container to show how you can instrument the OpenCensus Azure Monitor exporters as well as track telemetry from popular Python libraries via OpenCensus integrations."
 urlFragment: azure-monitor-opencensus-python
 ---
 
@@ -13,29 +14,33 @@ urlFragment: azure-monitor-opencensus-python
 
 ## Setup
 
-1. This package is not hosted on Pypi. You can install all dependencies locally using `pip install -r requirements.txt`.
+1. You install Docker. You chose apply version your os.
 2. To send telemetry to Azure Monitor, pass in your instrumentation key into `INSTRUMENTATION_KEY` in `config.py`.
 
-```
-INSTRUMENTATION_KEY = <your-ikey-here>
-```
+    ```python
+    INSTRUMENTATION_KEY = <your-ikey-here>
+    ```
 
-The default database URI links to a sqlite database `app.db`. To configure a different database, you can modify `config.py` and change the `SQLALCHEMY_DATABASE_URI` value to point to a database of your choosing.
+3. The default database URI links to a sqlite database `app.db`. To configure a different database, you can modify `config.py` and change the `SQLALCHEMY_DATABASE_URI` value to point to a database of your choosing.
 
-```
-SQLALCHEMY_DATABASE_URI = <your-database-URI-here>
-```
+    ```python
+    SQLALCHEMY_DATABASE_URI = <your-database-URI-here>
+    ```
 
 ## Usage
 
 1. Navigate to where `azure_monitor\flask_sample` is located.
-2. Run the main application via `python sample.py`.
-4. Hit your local endpoint (should be http://localhost:5000). This should open up a browser to the main page.
+2. Build docker image, command is `docker build --tag flask-insights-sample .`
+3. Run the container via `docker run -it -p 5005:80 flask-insights-sample`.
+4. Hit your local endpoint (should be http://localhost:5005). This should open up a browser to the main page.
 5. On the newly opened page, you can add tasks via the textbox under `Add a new todo item:`. You can enter any text you want (cannot be blank).
 6. Click `Add Item` to add the task. The task will be added under `Incomplete Items`. Adding an item with greater than 10 characters will generate an error.
+
+> TODO: `Save to File` functions are not supported by containers
+
 7. To utilize the `Save to File` feature, run the endpoint application via `python endpoint.py`. This will run another Flask application with a WSGI server running on http://localhost:5001. Click `Save to File` and all tasks will be written to a file `file.txt` in the `output` folder.
 8. Each task has a `Mark As Complete` button. Clicking it will move the task from incomplete to completed.
-9. You can also hit the `blacklist` url page to see a sample of a page that does not have telemetry being sent (http://localhost:5000/blacklist).
+9.  You can also hit the `blacklist` url page to see a sample of a page that does not have telemetry being sent (http://localhost:5000/blacklist).
 10. You can also run a command line interface application to hit the endpoints on you Flask application directly. Run `command.py` and follow the prompts accordingly.
 
 ## Types of telemetry sent
